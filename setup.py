@@ -21,7 +21,7 @@ def get_requirements()->List[str]:
                     requirement_list.append(requirement)
     except FileNotFoundError:
         print("requirements.txt file not found.")        
-    return requirement_list
+    return requirement_list 
 
 setup(
     name="trip-planner",
