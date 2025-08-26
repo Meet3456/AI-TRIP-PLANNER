@@ -27,6 +27,7 @@ async def process_query(query: InputQueryRequest):
         response = compiled_graph.invoke(input_query)
         
         if isinstance(response,dict) and "messages" in response:
+            # extracting th AIMessage content:
             final_output = response["messages"][-1].content
         else:
             final_output = str(response)
