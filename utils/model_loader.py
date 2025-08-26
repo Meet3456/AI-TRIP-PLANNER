@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from utils.config_loader import load_config
 from langchain_groq import ChatGroq
 
+load_dotenv()
 # Class for ConfigLoader
 class ConfigLoader:
     def __init__(self):
@@ -16,12 +17,25 @@ class ConfigLoader:
         return self.config.get(key)
 
 # Class for ModelLoader
-class ModelLoader:
-    model_provider: Literal["groq", "openai"] = "groq"
-    config = Optional[ConfigLoader] = Field(default=None,exclude=True)
-    
+class ModelLoader(BaseModel):
+
+    model_provider: Literal["groq", "openai"] = Field(
+        default="groq", 
+        description="LLM provider to use"
+    )
+
+    config : Optional[ConfigLoader] = Field(
+        default=None,
+        exclude=True
+    )
+
+    # model_post_init is a inbuilt method of Pydantic's BaseModel , which is used to perform actions after the model is initialized(__init__ method ke baad)
     def model_post_init(self, __context: Any) -> None:
         self.config = ConfigLoader()
+
+    # As we are passing a non-standard object like(ConfigLoader) to the config , pydantic will raise error so 
+    # You’re telling Pydantic: “Allow arbitrary Python objects (like custom classes, DB clients, file handles, etc.) as field values, without trying to validate or coerce them.”
+    # So config will accept the ConfigLoader() instance(object) without any issues.
     class Config:
         arbitrary_types_allowed = True
 
@@ -31,7 +45,7 @@ class ModelLoader:
         if self.model_provider == "groq":
             print("Loading Groq model...")
             groq_api_key = os.getenv("GROQ_API_KEY")
-            model_name = self.config["llm"]["groq"]["model_name"]
+            model_name = self.config["llm"].get("groq", {}).get("model_name")
             # model_name = self.config.__getitem__("llm").get("groq", {}).get("model_name")
             llm = ChatGroq(
                 model = model_name,
