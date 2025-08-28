@@ -14,16 +14,16 @@ class GraphBuilder():
 
     def __init__(self , model_provider:str):
 
-        # create an instance of ModelLoader class:
+        # create an instance of ModelLoader class , model_provider will be initialized in app.py:
         self.model_loader = ModelLoader(model_provider=model_provider)
 
-        # Call the load_llm method wrt to the model_loader instance:
+        # Call the load_llm method wrt to the model_loader instance: will load and initialize the groq model:
         self.llm = self.model_loader.load_llm()
 
         # initializing the tools list:
         self.tools = []
 
-        # initializing the tools class:
+        # initializing the individual tool class:
         self.weather_tools = WeatherInfoTool()
         self.place_search_tools = PlaceSearchTool()
         self.calculator_tools = CalculatorTool()
