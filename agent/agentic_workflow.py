@@ -23,7 +23,7 @@ class GraphBuilder():
         # initializing the tools list:
         self.tools = []
 
-        # initializing the individual tool class:
+        # initializing the instances of individual tool classes:
         self.weather_tools = WeatherInfoTool()
         self.place_search_tools = PlaceSearchTool()
         self.calculator_tools = CalculatorTool()
